@@ -34,6 +34,9 @@ The basic hardware concept comes from [labdvm/Phenix-1255-HW](https://github.com
 - **Antenna matching:** new TX and RX matching networks between the SX1255 and the filters, see [RF matching networks](#rf-matching-networks).
 - **RF connector layout:** hybrid land pattern for J5/J6 that takes either a vertical SMD jack or an edge-mount SMA jack, see [SMA connector options](#sma-connector-options).
 - **PA supply switching:** an integrated load switch (TPS22917) replaces the P-channel MOSFET, see [Power](#power).
+- **`~PA_EN` pin:** moved from P2_4 to P1_23 (J9.23) for better routing, see [MCU pin assignment](#mcu-pin-assignment).
+- **3.3 V regulator:** an ST LDK130M33R (SOT-23-5) replaces the Microchip MCP1703A (SOT-223), see [Power](#power).
+- **Hardware ID:** three solder jumpers (JP1–JP3, `HW_ID_0`…`HW_ID_2`) encode the board version, so that the firmware can support several hardware versions (up to 8). This board is **hardware ID 0** (all jumpers open). See [MCU pin assignment](#mcu-pin-assignment).
 
 ## Overview
 
@@ -63,7 +66,7 @@ The basic hardware concept comes from [labdvm/Phenix-1255-HW](https://github.com
 | Display | OLED 0.96″ 128×64, SSD1306, I²C, pin order GND/VDD/SCL/SDA (module with on-board pull-ups) | – |
 | Tactile switch (SPST-NO, 6.5 × 6 mm, SMD), 3× | EVQ-Q2Y03W | Panasonic |
 | Status LEDs 0603, 5× (PWR, PA, OK, INFO, ERR) | 150060xS75000 (green, yellow, red) | Würth |
-| Hardware ID, 3× | solder jumper, open | – |
+| Hardware ID, 3× | solder jumper, open (hardware ID 0) | – |
 | Headers to the FRDM board | Samtec SSQ (from the template) | Samtec |
 
 Passives are 0603 (resistors UNI-ROYAL `0603WAF…`, capacitors Samsung/Murata/Yageo, RF inductors Murata `LQW18AN…`). The manufacturer part numbers are stored in the `MPN` field of the symbols.
@@ -233,7 +236,7 @@ Regenerate the files after every layout change:
 
 - All SMD parts are on the top side. Populate **one** SMA connector type per port (see [SMA connector options](#sma-connector-options)).
 - The FRDM headers J1–J4, J8 and J9 are marked *Do not populate* on the PCB, so they are not in a BOM or position file exported from the PCB. Solder them by hand.
-- The hardware ID jumpers JP1–JP3 are open; close them with solder as needed.
+- This board is **hardware ID 0**: leave the jumpers JP1–JP3 open. Do not bridge them, otherwise the firmware detects a different hardware version.
 - If the RX match is to be measured (see [RF matching networks](#rf-matching-networks)), leave the TA0655A off the first board.
 
 ## Bring-up checklist
