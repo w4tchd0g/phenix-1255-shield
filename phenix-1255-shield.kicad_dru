@@ -1,0 +1,70 @@
+(version 1)
+
+# Custom DRC rules for phenix-1255-shield
+# Stackup: JLCPCB JLC04161H-7628 (1.6 mm, 4 layers)
+#   F.Cu  signals + RF (CPWG, reference In1)
+#   In1   GND plane (solid, do not route here)
+#   In2   power plane (+5v0 / +3v3 / +3.3V_LDO areas)
+#   B.Cu  signals + GND fill
+# Base values (net classes, minimums) are in the project file.
+# KiCad 10: every value needs a unit (0.2mm), otherwise the whole file
+# is rejected and none of these rules apply.
+
+# --- RF -------------------------------------------------------------
+# 50 ohm CPWG on F.Cu over In1: W = 0.30 mm, gap to GND fill = 0.30 mm
+# (gap comes from the RF net class clearance).
+
+(rule "RF: no vias in the RF path"
+	(constraint disallow via)
+	(condition "A.NetClass == 'RF'"))
+
+(rule "RF: not on inner layers"
+	(layer inner)
+	(constraint disallow track)
+	(condition "A.NetClass == 'RF'"))
+
+(rule "RF: not on B.Cu (reference would be the power plane)"
+	(layer "B.Cu")
+	(constraint disallow track)
+	(condition "A.NetClass == 'RF'"))
+
+# The SX1255 (QFN-32, 0.5 mm pitch) only leaves 0.2 mm between pads.
+# Inside its courtyard the RF clearance drops to the default value.
+(rule "RF: fine pitch at SX1255"
+	(constraint clearance (min 0.2mm))
+	(condition "A.NetClass == 'RF' && A.intersectsCourtyard('IC1')"))
+
+# --- SX1255 fan-out -------------------------------------------------
+# The corner pads of the QFN land pattern (e.g. 1/32) are only 0.177 mm
+# apart at their inner corners. JLC manages 0.1 mm, so allow 0.15 mm
+# between the IC's own pads.
+(rule "SX1255: corner pads"
+	(constraint clearance (min 0.15mm))
+	(condition "A.Type == 'Pad' && B.Type == 'Pad' && A.memberOfFootprint('IC1') && B.memberOfFootprint('IC1')"))
+
+# Pads are 0.3 mm wide at 0.5 mm pitch: a 0.4/0.5 mm power track cannot
+# leave a pad without violating the clearance to its neighbours. Inside
+# the courtyard non-RF tracks start at 0.25 mm (router default when
+# starting at an IC1 pad) and widen to the net class width outside.
+(rule "SX1255: neck-down"
+	(constraint track_width (min 0.15mm) (opt 0.25mm))
+	(condition "A.NetClass != 'RF' && A.intersectsCourtyard('IC1')"))
+
+# --- Zone connections ----------------------------------------------
+# RF parts get solid GND (no thermal reliefs) for low ground inductance.
+# Exception: the GND pads of the SMA footprint (J5/J6) carry a local pad
+# override so the Samtec edge-mount connector can be hand-soldered.
+# A local pad setting takes precedence over this rule.
+#   B.Cu: thermal relief, 0.8 mm spokes, 0.3 mm gap (automatic spokes)
+#   F.Cu: thermal relief, 1.0 mm spokes, 0.3 mm gap, spokes placed by
+#         templates in the footprint: 1x up, 3x outward to the via fence.
+#         No spoke towards the centre pin or the board edge.
+(rule "Solid GND at RF parts"
+	(constraint zone_connection solid)
+	(condition "A.Type == 'Pad' && A.NetName == 'GND' && (A.memberOfFootprint('IC1') || A.memberOfFootprint('FL*') || A.memberOfFootprint('J5') || A.memberOfFootprint('J6') || A.memberOfFootprint('D1') || A.memberOfFootprint('D8') || A.memberOfFootprint('D4'))"))
+
+# --- Vias -----------------------------------------------------------
+# Via to via (stitching): drill edge to drill edge 0.25 mm (JLC min 0.2).
+(rule "Via to via"
+	(constraint hole_to_hole (min 0.25mm))
+	(condition "A.Type == 'Via' && B.Type == 'Via'"))

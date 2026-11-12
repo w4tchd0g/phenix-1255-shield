@@ -1,0 +1,9 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "SX1255")(type "KiCad")(uri "${KIPRJMOD}/ext_parts/SX1255IWLTRT.pretty")(options "")(descr "Semtech SX1255, MLPQ-W 32 with thermal vias"))
+  (lib (name "Display_128x64_096_I2C")(type "KiCad")(uri "${KIPRJMOD}/ext_parts/Display_128x64_096_I2C.pretty")(options "")(descr "OLED 0.96 inch 128x64 SSD1306 I2C (TG9541, CC0)"))
+  (lib (name "LFCN-490+")(type "KiCad")(uri "${KIPRJMOD}/ext_parts/LFCN-490+.pretty")(options "")(descr "Mini-Circuits LFCN-490+ low-pass filter, case FV1206"))
+  (lib (name "TA0655A")(type "KiCad")(uri "${KIPRJMOD}/ext_parts/TA0655A.pretty")(options "")(descr "Tai-Saw TA0655A SAW filter 430 MHz (drawn from datasheet)"))
+  (lib (name "EVQ-Q2Y03W")(type "KiCad")(uri "${KIPRJMOD}/ext_parts/EVQ-Q2Y03W.pretty")(options "")(descr "Panasonic EVQ-Q2 tactile switch"))
+  (lib (name "CONSMA001-SMD-G")(type "KiCad")(uri "${KIPRJMOD}/ext_parts/CONSMA001-SMD-G.pretty")(options "")(descr "SMA jack land pattern: TE CONSMA001-SMD-G (vertical SMD) or Samtec SMA-J-P-H-ST-EM1 (edge mount)"))
+)
