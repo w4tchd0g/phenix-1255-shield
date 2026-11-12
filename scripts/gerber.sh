@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: 2026 w4tchd0g
+# SPDX-FileCopyrightText: 2026 w4tchd0g (DM5LF)
 # SPDX-License-Identifier: CERN-OHL-P-2.0
 # Exports Gerber and drill files (4 layers) and packs them into one zip that
 # JLCPCB and PCBWay both accept.

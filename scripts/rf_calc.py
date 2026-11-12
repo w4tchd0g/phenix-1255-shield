@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-FileCopyrightText: 2026 w4tchd0g
+# SPDX-FileCopyrightText: 2026 w4tchd0g (DM5LF)
 # SPDX-License-Identifier: CERN-OHL-P-2.0
 """RF line and SMA launch calculation for the phenix-1255-shield.
 

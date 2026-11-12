@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: 2026 w4tchd0g
+# SPDX-FileCopyrightText: 2026 w4tchd0g (DM5LF)
 # SPDX-License-Identifier: CERN-OHL-P-2.0
 # Renders 3D images of the PCB for the README.
 # Usage: ./scripts/render.sh   (run from anywhere)

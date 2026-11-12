@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-FileCopyrightText: 2026 w4tchd0g
+# SPDX-FileCopyrightText: 2026 w4tchd0g (DM5LF)
 # SPDX-License-Identifier: CERN-OHL-P-2.0
 """Generates the simplified 3D models in ext_parts/3d/ from datasheet dimensions.
 

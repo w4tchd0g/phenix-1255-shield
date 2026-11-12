@@ -29,14 +29,32 @@ J5 (TX) and J6 (RX) use a hybrid land pattern that takes either connector type. 
 
 ## Changes from Phenix-1255-HW
 
-The basic hardware concept comes from [labdvm/Phenix-1255-HW](https://github.com/labdvm/Phenix-1255-HW) (Copyright © Z32IT 2026, CERN-OHL-P-2.0). This project changes it as follows (2026-11):
+The basic hardware concept comes from [labdvm/Phenix-1255-HW](https://github.com/labdvm/Phenix-1255-HW) (Copyright © Z32IT 2026, CERN-OHL-P-2.0). This project changes revision V2 of it as follows (2026-11):
 
-- **Antenna matching:** new TX and RX matching networks between the SX1255 and the filters, see [RF matching networks](#rf-matching-networks).
-- **RF connector layout:** hybrid land pattern for J5/J6 that takes either a vertical SMD jack or an edge-mount SMA jack, see [SMA connector options](#sma-connector-options).
-- **PA supply switching:** an integrated load switch (TPS22917) replaces the P-channel MOSFET, see [Power](#power).
-- **`~PA_EN` pin:** moved from P2_4 to P1_23 (J9.23) for better routing, see [MCU pin assignment](#mcu-pin-assignment).
-- **3.3 V regulator:** an ST LDK130M33R (SOT-23-5) replaces the Microchip MCP1703A (SOT-223), see [Power](#power).
-- **Hardware ID:** three solder jumpers (JP1–JP3, `HW_ID_0`…`HW_ID_2`) encode the board version, so that the firmware can support several hardware versions (up to 8). This board is **hardware ID 0** (all jumpers open). See [MCU pin assignment](#mcu-pin-assignment).
+**RF**
+
+- **Antenna matching:** new matching networks. TX: an L-network transforms the 50 Ω of the LFCN-490+ to the 100 Ω optimum load of RFO_P (before: 100 pF straight to the filter). RX: 100 pF / 33 nH / 68 nH for the 200 Ω LNA input (before: 39 nH series, 82 nH shunt). See [RF matching networks](#rf-matching-networks).
+- **RF connectors:** SMA instead of U.FL, with a hybrid land pattern for J5/J6 that takes either a vertical SMD jack or an edge-mount jack, see [SMA connector options](#sma-connector-options).
+- **Port protection:** each SMA port has a 100 nH DC shunt and a low-capacitance TVS diode (before: 1 MΩ to GND). A BAV99 limiter protects the RX input of the SX1255.
+- **PCB:** 4 layers instead of 2, with 50 Ω coplanar waveguides on a solid GND plane, via fences along the RF lines and a GND stitching grid, see [PCB](#pcb). No mounting holes.
+- **Reference clock:** 2520 footprint only, TCXO AC-coupled to XTB through 10 nF (before: direct connection with 10 kΩ / 10 pF to GND).
+
+**Power**
+
+- **3.3 V regulator:** an ST LDK130M33R (SOT-23-5) replaces the Microchip MCP1703A (SOT-223). It runs directly from `+5v0`; the PTC fuse, the TVS array and the ferrite bead at the input are gone.
+- **Supply split:** the LDO only supplies the RF part (SX1255, TCXO, PA load switch). Display, buttons and jumpers run from the FRDM 3.3 V rail. The 1 Ω series resistors in the SX1255 supply pins are gone. See [Power](#power).
+- **PA supply switching:** an integrated load switch (TPS22917) replaces the P-channel MOSFET. The *bypass* solder jumper is gone.
+
+**Digital interface and MCU pins**
+
+- **`~PA_EN` pin:** moved from P2_4 to P1_23 (J9.23) for better routing.
+- **Series resistors:** 33 Ω at the driving end of each SX1255 signal. NSS has a 10 kΩ pull-up, CK_IN and Q_IN are bridged and pulled down with one 10 kΩ resistor, `SX_RST` has no series resistor.
+- **Hardware ID:** three solder jumpers (JP1–JP3, `HW_ID_0`…`HW_ID_2`) encode the board version, so that the firmware can support several hardware versions (up to 8). This board is **hardware ID 0** (all jumpers open).
+- **Buttons:** Panasonic EVQ-Q2 instead of C&K PTS647. *OK* and *→* swapped pins: *OK* is now on P1_22 (J3.3), *→* on P4_12 (J4.1).
+- **Status LEDs:** five instead of four; the new PA LED lights while the PA is powered. The LEDs on the GPIOs were reassigned: P0_14 green *OK* (before: red *Err*), P0_22 yellow *INFO* (before: *Warn*), P0_15 red *ERR* (before: green *Good*). 1 kΩ instead of 1.5 kΩ series resistors.
+- **Display:** footprint with the module outline (DS1) instead of a 1×4 socket, without series resistors in SCL/SDA.
+
+See [MCU pin assignment](#mcu-pin-assignment) for the pins. The TX driver amplifier of the *V2 Plus* variant is not part of this design.
 
 ## Overview
 
@@ -286,10 +304,7 @@ The project-specific libraries are linked relative to the project via `${KIPRJMO
 
 ## License
 
-Copyright © Z32IT 2026 (original design [Phenix-1255-HW](https://github.com/labdvm/Phenix-1255-HW)).
-Modifications copyright © w4tchd0g 2026.
-
-This project (schematics, PCB, the libraries in `ext_parts/`, scripts and documentation) is a modified version of [Phenix-1255-HW](https://github.com/labdvm/Phenix-1255-HW) (see [Changes from Phenix-1255-HW](#changes-from-phenix-1255-hw)) and is licensed under the [CERN Open Hardware Licence Version 2 – Permissive](LICENSE) (CERN-OHL-P-2.0), except for the third-party content listed below.
+This project (schematics, PCB, the libraries in `ext_parts/`, scripts and documentation) is a modified version of [Phenix-1255-HW](https://github.com/labdvm/Phenix-1255-HW), Copyright © Z32IT 2026 (see [Changes from Phenix-1255-HW](#changes-from-phenix-1255-hw)), and is licensed under the [CERN Open Hardware Licence Version 2 – Permissive](LICENSE) (CERN-OHL-P-2.0), except for the third-party content listed below.
 
 Third-party content:
 

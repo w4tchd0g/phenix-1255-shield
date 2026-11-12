@@ -10,9 +10,9 @@
 	(title_block
 		(title "phenix-1255-shield")
 		(date "2026-11-12")
-		(company "w4tchd0g")
+		(company "w4tchd0g (DM5LF)")
 		(comment 1 "Based on Phenix-1255-HW, Copyright (c) Z32IT 2026")
-		(comment 2 "Modifications Copyright (c) w4tchd0g 2026")
+		(comment 2 "Modifications Copyright (c) w4tchd0g (DM5LF) 2026")
 		(comment 3 "License: CERN-OHL-P-2.0")
 		(comment 4 "https://github.com/w4tchd0g/phenix-1255-shield")
 	)
